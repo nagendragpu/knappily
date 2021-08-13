@@ -26,9 +26,9 @@ const Card = ({
 }) => {
   return (
     <Animated.View
-      onTouchStart={() => {
-        console.log('Touch start');
-      }}
+      // onTouchStart={() => {
+
+      // }}
       {...dragHandlers}
       style={[
         {
@@ -58,14 +58,24 @@ const Card = ({
             paddingVertical: 16 / 2,
             flexDirection: 'row',
             justifyContent: 'space-between',
+            // flexGrow: 0,
           }}>
-          <Text style={{fontWeight: '600', fontSize: 18}}>{item.title}</Text>
+          <View style={{flex: 1}}>
+            <Text
+              style={{
+                fontWeight: '600',
+                fontSize: 18,
+              }}>
+              {item.title}
+            </Text>
+          </View>
           <Image
             style={{
               height: 40,
               width: 30,
               tintColor: RED_COLOR,
               marginTop: -10,
+              // flex: 1,
             }}
             source={icons.bookmark}
           />
@@ -80,28 +90,27 @@ const Card = ({
             {item.content}
           </Text>
         </View>
-        <LinearGradient colors={['rgba(0,0, 0, 0.2)', 'rgba(0, 0, 0, 0)']}>
-          <View
+
+        <View
+          style={{
+            flexDirection: 'row',
+            borderTopWidth: 1,
+            borderTopColor: 'gray',
+            marginBottom: 20,
+            justifyContent: 'space-between',
+          }}>
+          <Text
             style={{
-              flexDirection: 'row',
-              borderTopWidth: 1,
-              borderTopColor: 'gray',
-              marginBottom: 20,
-              justifyContent: 'space-between',
+              fontWeight: '600',
+              color: RED_COLOR,
+              fontSize: 16,
             }}>
-            <Text
-              style={{
-                fontWeight: '600',
-                color: RED_COLOR,
-                fontSize: 16,
-              }}>
-              Sports
-            </Text>
-            <Text style={{marginRight: 50, color: 'gray', fontSize: 16}}>
-              Aug 9,2021
-            </Text>
-          </View>
-        </LinearGradient>
+            Sports
+          </Text>
+          <Text style={{marginRight: 50, color: 'gray', fontSize: 16}}>
+            Aug 9,2021
+          </Text>
+        </View>
 
         <View
           style={{
