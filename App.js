@@ -57,6 +57,7 @@ const data = [
 
 const App = () => {
   const swipe = useRef(new Animated.ValueXY()).current;
+  const swipedcard = useRef(new Animated.ValueXY({x: 0, y: -height})).current;
   const [currentIndex, setCurrentIndex] = React.useState(0);
 
   const panResponder = PanResponder.create({
@@ -64,7 +65,26 @@ const App = () => {
     onPanResponderRelease: (e, gesture) => {
       console.log(gesture.dy);
       console.log(gesture.vy);
-      if (-gesture.dy > height / 2 && -gesture.vy > 0.7) {
+
+      if (currentIndex > 0 && gesture.dy > height / 2 && gesture.vy > 0.7) {
+        Animated.timing(swipedcard, {
+          toValue: {
+            x: 0,
+            y: 0,
+          },
+          duration: 400,
+          useNativeDriver: false,
+          // friction: 5,
+        }).start(() => {
+          setCurrentIndex(prevIndex => prevIndex - 1);
+
+          swipedcard.setValue({x: 0, y: -height});
+        });
+      } else if (
+        -gesture.dy > height / 2 &&
+        -gesture.vy > 0.7 &&
+        currentIndex < data.length - 1
+      ) {
         console.log('reached');
 
         Animated.timing(swipe, {
@@ -82,24 +102,61 @@ const App = () => {
         });
       } else {
         console.log('else');
-
-        Animated.spring(swipe, {
-          toValue: {x: 0, y: 0},
-          useNativeDriver: false,
-        }).start();
+        Animated.parallel([
+          Animated.spring(swipe, {
+            toValue: {x: 0, y: 0},
+            useNativeDriver: false,
+          }),
+          Animated.spring(swipedcard, {
+            toValue: {x: 0, y: -height},
+            useNativeDriver: false,
+          }),
+        ]).start();
       }
     },
     onPanResponderMove: (e, gesture) => {
-      swipe.setValue({x: 0, y: gesture.dy});
+      if (gesture.dy > 0 && currentIndex > 0) {
+        console.log('swipe deow');
+        swipedcard.setValue({x: 0, y: -height + gesture.dy});
+      } else {
+        swipe.setValue({x: 0, y: gesture.dy});
+      }
     },
   });
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{flex: 1, backgroundColor: 'yellow'}}>
       {data
         ?.map((item, index) => {
-          if (index < currentIndex) {
+          if (index === currentIndex - 1) {
+            console.log('swipedcard');
+            const dragHandlers = panResponder.panHandlers;
+            return (
+              <Animated.View
+                {...dragHandlers}
+                key={index.toString()}
+                style={[
+                  {
+                    backgroundColor: 'white',
+                    position: 'absolute',
+                    borderColor: 'white',
+                    borderWidth: 4,
+                    width,
+                    height,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  },
+                  swipedcard.getLayout(),
+                ]}>
+                <Text
+                  style={{fontSize: 100, fontWeight: 'bold', color: 'black'}}>
+                  {item.id}
+                </Text>
+              </Animated.View>
+            );
+          } else if (index < currentIndex) {
             return null;
           }
+
           const dragHandlers =
             currentIndex === index ? panResponder.panHandlers : {};
           console.log(dragHandlers);
@@ -110,7 +167,7 @@ const App = () => {
               key={index.toString()}
               style={[
                 {
-                  backgroundColor: `rgba(0, 0, 256,0.${index * 2})`,
+                  backgroundColor: 'white',
                   position: 'absolute',
                   borderColor: 'white',
                   borderWidth: 4,
@@ -121,7 +178,7 @@ const App = () => {
                 },
                 currentIndex === index ? swipe.getLayout() : null,
               ]}>
-              <Text style={{fontSize: 100, fontWeight: 'bold', color: 'white'}}>
+              <Text style={{fontSize: 100, fontWeight: 'bold', color: 'black'}}>
                 {item.id}
               </Text>
             </Animated.View>
