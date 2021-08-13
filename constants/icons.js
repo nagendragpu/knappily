@@ -5,6 +5,7 @@ const menu = require('../assets/icons/menu_knaps.png');
 const search = require('../assets/icons/search.png');
 const share = require('../assets/icons/tweetshare.png');
 const uparrow = require('../assets/icons/up-arrow.png');
+const shareblack = require('../assets/icons/shareblack.png');
 
 export default {
   bookmark,
@@ -14,4 +15,5 @@ export default {
   search,
   share,
   uparrow,
+  shareblack,
 };
