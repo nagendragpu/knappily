@@ -13,7 +13,7 @@ import {
   FlatList,
   PanResponder,
 } from 'react-native';
-
+import Card from './components/Card';
 const {width, height} = Dimensions.get('window');
 
 const data = [
@@ -63,10 +63,7 @@ const App = () => {
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
     onPanResponderRelease: (e, gesture) => {
-      console.log(gesture.dy);
-      console.log(gesture.vy);
-
-      if (currentIndex > 0 && gesture.dy > height / 2 && gesture.vy > 0.7) {
+      if (currentIndex > 0 && gesture.dy > 150 && gesture.vy > 0.3) {
         Animated.timing(swipedcard, {
           toValue: {
             x: 0,
@@ -81,8 +78,8 @@ const App = () => {
           swipedcard.setValue({x: 0, y: -height});
         });
       } else if (
-        -gesture.dy > height / 2 &&
-        -gesture.vy > 0.7 &&
+        -gesture.dy > 50 &&
+        -gesture.vy > 0.3 &&
         currentIndex < data.length - 1
       ) {
         console.log('reached');
@@ -130,58 +127,34 @@ const App = () => {
           if (index === currentIndex - 1) {
             console.log('swipedcard');
             const dragHandlers = panResponder.panHandlers;
+            const isSwipe = true;
             return (
-              <Animated.View
+              <Card
+                key={index}
+                index={index}
+                item={item}
+                currentIndex={currentIndex}
+                isSwipe={isSwipe}
+                swipedcard={swipedcard}
+                swipe={swipe}
                 {...dragHandlers}
-                key={index.toString()}
-                style={[
-                  {
-                    backgroundColor: 'white',
-                    position: 'absolute',
-                    borderColor: 'white',
-                    borderWidth: 4,
-                    width,
-                    height,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  },
-                  swipedcard.getLayout(),
-                ]}>
-                <Text
-                  style={{fontSize: 100, fontWeight: 'bold', color: 'black'}}>
-                  {item.id}
-                </Text>
-              </Animated.View>
+              />
             );
           } else if (index < currentIndex) {
             return null;
           }
-
           const dragHandlers =
             currentIndex === index ? panResponder.panHandlers : {};
-          console.log(dragHandlers);
-          console.log('current', currentIndex);
           return (
-            <Animated.View
+            <Card
+              key={index}
+              index={index}
               {...dragHandlers}
-              key={index.toString()}
-              style={[
-                {
-                  backgroundColor: 'white',
-                  position: 'absolute',
-                  borderColor: 'white',
-                  borderWidth: 4,
-                  width,
-                  height,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                },
-                currentIndex === index ? swipe.getLayout() : null,
-              ]}>
-              <Text style={{fontSize: 100, fontWeight: 'bold', color: 'black'}}>
-                {item.id}
-              </Text>
-            </Animated.View>
+              swipedcard={swipedcard}
+              swipe={swipe}
+              item={item}
+              currentIndex={currentIndex}
+            />
           );
         })
         .reverse()}
