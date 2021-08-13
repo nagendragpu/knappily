@@ -7,8 +7,10 @@ import {
   StyleSheet,
   Text,
   useColorScheme,
+  Image,
   View,
   Dimensions,
+  Easing,
   Animated,
   FlatList,
   PanResponder,
@@ -16,15 +18,46 @@ import {
 import Card from './components/Card';
 import {data} from './constants/data';
 const {width, height} = Dimensions.get('window');
+import Header from './components/Header';
 
 const App = () => {
+  // console.log('header');
+  // Animated.timing(headerHeight, {
+  //   toValue: 0,
+  //   duration: 150,
+  //   useNativeDriver: false,
+  // }).start();
+
   const swipe = useRef(new Animated.ValueXY()).current;
   const swipedcard = useRef(new Animated.ValueXY({x: 0, y: -height})).current;
+  const headerHeight = React.useRef(new Animated.Value(0)).current;
+  const [headerHide, setHeaderHide] = React.useState(true);
   const [currentIndex, setCurrentIndex] = React.useState(0);
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
+
     onPanResponderRelease: (e, gesture) => {
+      console.log('onP');
+
+      if (headerHide) {
+        Animated.timing(headerHeight, {
+          toValue: -60,
+          duration: 150,
+          easing: Easing.linear,
+          useNativeDriver: false,
+        }).start(() => {
+          setHeaderHide(!headerHide);
+        });
+      } else {
+        Animated.timing(headerHeight, {
+          toValue: 0,
+          duration: 150,
+          easing: Easing.linear,
+          useNativeDriver: false,
+        }).start(setHeaderHide(!headerHide));
+      }
+
       if (currentIndex > 0 && gesture.dy > 150 && gesture.vy > 0.3) {
         Animated.timing(swipedcard, {
           toValue: {
@@ -60,7 +93,6 @@ const App = () => {
           swipe.setValue({x: 0, y: 0});
         });
       } else {
-        console.log('else');
         Animated.parallel([
           Animated.spring(swipe, {
             toValue: {x: 0, y: 0},
@@ -85,8 +117,19 @@ const App = () => {
   return (
     <SafeAreaView style={{backgroundColor: '#7c1518', flex: 1}}>
       <StatusBar barStyle="light-content" backgroundColor="#7c1518" />
-      <View style={{flex: 1, backgroundColor: 'yellow'}}>
-        {console.log('here')}
+      {console.log(headerHeight)}
+      {console.log(headerHide)}
+      <Animated.View
+        style={{flex: 1, backgroundColor: 'yellow'}}
+        // onTouchEnd={() => {
+        //   console.log('onTouchEnd');
+        // }}
+        // onTouchStart={event => {
+        //   console.log('touch');
+        //   setHeaderHide(!headerHeight);
+        // }}
+      >
+        <Header headerHeight={headerHeight} />
         {data
           ?.map((item, index) => {
             if (index === currentIndex - 1) {
@@ -123,7 +166,7 @@ const App = () => {
             );
           })
           .reverse()}
-      </View>
+      </Animated.View>
     </SafeAreaView>
   );
 };
