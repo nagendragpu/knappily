@@ -38,26 +38,27 @@ const App = () => {
     onMoveShouldSetPanResponder: () => true,
 
     onPanResponderRelease: (e, gesture) => {
-      console.log('onP');
+      console.log('onP', gesture.dy);
 
-      if (headerHide) {
-        Animated.timing(headerHeight, {
-          toValue: -60,
-          duration: 150,
-          easing: Easing.linear,
-          useNativeDriver: false,
-        }).start(() => {
-          setHeaderHide(!headerHide);
-        });
-      } else {
-        Animated.timing(headerHeight, {
-          toValue: 0,
-          duration: 150,
-          easing: Easing.linear,
-          useNativeDriver: false,
-        }).start(setHeaderHide(!headerHide));
+      if (gesture.dy == 0) {
+        if (headerHide) {
+          Animated.timing(headerHeight, {
+            toValue: -60,
+            duration: 150,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }).start(() => {
+            setHeaderHide(!headerHide);
+          });
+        } else {
+          Animated.timing(headerHeight, {
+            toValue: 0,
+            duration: 150,
+            easing: Easing.linear,
+            useNativeDriver: true,
+          }).start(setHeaderHide(!headerHide));
+        }
       }
-
       if (currentIndex > 0 && gesture.dy > 150 && gesture.vy > 0.3) {
         Animated.timing(swipedcard, {
           toValue: {
@@ -110,7 +111,10 @@ const App = () => {
         console.log('swipe deow');
         swipedcard.setValue({x: 0, y: -height + gesture.dy});
       } else {
-        swipe.setValue({x: 0, y: gesture.dy});
+        console.log('swipeUp', gesture.dy);
+        if (currentIndex < data.length - 1 && currentIndex !== 0) {
+          swipe.setValue({x: 0, y: gesture.dy});
+        }
       }
     },
   });
@@ -119,16 +123,7 @@ const App = () => {
       <StatusBar barStyle="light-content" backgroundColor="#7c1518" />
       {console.log(headerHeight)}
       {console.log(headerHide)}
-      <Animated.View
-        style={{flex: 1, backgroundColor: 'yellow'}}
-        // onTouchEnd={() => {
-        //   console.log('onTouchEnd');
-        // }}
-        // onTouchStart={event => {
-        //   console.log('touch');
-        //   setHeaderHide(!headerHeight);
-        // }}
-      >
+      <Animated.View style={{flex: 1, backgroundColor: 'yellow'}}>
         <Header headerHeight={headerHeight} />
         {data
           ?.map((item, index) => {

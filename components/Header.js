@@ -20,7 +20,7 @@ const Header = ({headerHeight}) => {
       <Animated.View
         style={{
           position: 'absolute',
-          top: headerHeight,
+          top: 0,
           left: 0,
           right: 0,
           height: 60,
@@ -31,6 +31,7 @@ const Header = ({headerHeight}) => {
           paddingHorizontal: 16,
           paddingVertical: 16 / 2,
           zIndex: 2,
+          transform: [{translateY: headerHeight}],
         }}>
         <View
           style={{
