@@ -7,9 +7,11 @@ import {
   Dimensions,
   ImageBackground,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 const {width, height} = Dimensions.get('window');
 import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
 
 import {icons} from '../constants';
 
@@ -24,11 +26,11 @@ const Card = ({
   swipe,
   ...dragHandlers
 }) => {
+  const navigation = useNavigation();
+  // console.log(item.detail);
+
   return (
     <Animated.View
-      // onTouchStart={() => {
-
-      // }}
       {...dragHandlers}
       style={[
         {
@@ -61,13 +63,16 @@ const Card = ({
             // flexGrow: 0,
           }}>
           <View style={{flex: 1}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 18,
-              }}>
-              {item.title}
-            </Text>
+            <TouchableOpacity
+              onPressIn={() => navigation.navigate('Detail', item)}>
+              <Text
+                style={{
+                  fontWeight: '600',
+                  fontSize: 18,
+                }}>
+                {item.title}
+              </Text>
+            </TouchableOpacity>
           </View>
           <Image
             style={{
