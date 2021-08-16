@@ -9,17 +9,25 @@ import {
   Text,
   View,
   Animated,
+  TouchableOpacity,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
+import {icons} from '../constants';
 const {width, height} = Dimensions.get('window');
+import {useNavigation} from '@react-navigation/native';
+
 const RED_COLOR = '#7c1518';
 
 const Detail = () => {
+  const navigation = useNavigation();
+
   const scrollX = React.useRef(new Animated.Value(0)).current;
+  const scrollY = React.useRef(new Animated.Value(0)).current;
+  const diffClamp = Animated.diffClamp(scrollY, 0, 70);
+
   const route = useRoute();
-  //   console.log(route.params);
   const data = route.params.detail;
-  // console.log(data);
+  const title = route.params.title;
 
   const scrollView = React.useRef();
 
@@ -92,6 +100,59 @@ const Detail = () => {
     );
   }
 
+  function renderFooter() {
+    return (
+      <Animated.View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 70,
+          backgroundColor: 'white',
+          zIndex: 1,
+          padding: 10,
+          flexDirection: 'row',
+          alignItems: 'center',
+          transform: [
+            {
+              translateY: diffClamp.interpolate({
+                inputRange: [0, 70],
+                outputRange: [0, 70],
+                extrapolate: 'clamp',
+              }),
+            },
+          ],
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Image
+              style={[
+                styles.iconStyle,
+                {
+                  transform: [{rotate: '-90deg'}],
+                },
+              ]}
+              source={icons.upload}
+            />
+          </TouchableOpacity>
+          <View style={{flex: 1, marginLeft: 10}}>
+            <Text style={{fontWeight: '700', fontSize: 18}}>{title}</Text>
+          </View>
+          <Image style={[styles.iconStyle]} source={icons.three_dot_menu} />
+        </View>
+      </Animated.View>
+    );
+  }
+
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
       {/* <SafeAreaView /> */}
@@ -116,9 +177,13 @@ const Detail = () => {
         renderItem={({item, index}) => {
           // console.log(item.content);
           return (
-            <ScrollView
+            <Animated.ScrollView
               scrollEnabled={true}
               contentContainerStyle={{}}
+              onScroll={Animated.event(
+                [{nativeEvent: {contentOffset: {y: scrollY}}}],
+                {useNativeDriver: true},
+              )}
               style={{flex: 1}}>
               <View
                 style={{
@@ -145,10 +210,11 @@ const Detail = () => {
                 </View>
               </View>
               {/* <View style={{height: 50}} /> */}
-            </ScrollView>
+            </Animated.ScrollView>
           );
         }}
       />
+      {renderFooter()}
     </View>
   );
 };
@@ -163,5 +229,10 @@ const styles = StyleSheet.create({
   boxContent: {
     fontWeight: '700',
     fontSize: 15,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+    tintColor: 'black',
   },
 });
