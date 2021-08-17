@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -15,6 +15,7 @@ import {useRoute} from '@react-navigation/native';
 import {icons} from '../constants';
 const {width, height} = Dimensions.get('window');
 import {useNavigation} from '@react-navigation/native';
+import FilterModal from './FilterModal';
 
 const RED_COLOR = '#7c1518';
 
@@ -24,13 +25,23 @@ const Detail = () => {
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const scrollY = React.useRef(new Animated.Value(0)).current;
   const diffClamp = Animated.diffClamp(scrollY, 0, 70);
+  const [headerIndex, setHeaderIndex] = useState(true);
+  const scrollviewX = React.useRef(new Animated.Value(0)).current;
+  const flatlist = React.useRef();
+  const [showFilterMode, setShowFilterMode] = React.useState(false);
+
+  const onItemPress = React.useCallback(itemIndex => {
+    flatlist?.current?.scrollToOffset({
+      offset: itemIndex * width,
+    });
+  });
 
   const route = useRoute();
   const data = route.params.detail;
   const title = route.params.title;
+  const name = route.params.name;
 
   const scrollView = React.useRef();
-
   function renderHeader() {
     return (
       <View
@@ -42,14 +53,20 @@ const Detail = () => {
           // borderWidth: 2,
           // borderColor: 'red',
         }}>
-        <ScrollView
+        <Animated.ScrollView
           ref={scrollView}
           horizontal={true}
           showsVerticalScrollIndicator={false}
-          // onScroll={event => {
-          //   console.log(event.nativeEvent.contentOffset.x);
-          // }}
+          // onScroll={Animated.event(
+          //   [{nativeEvent: {contentOffset: {x: scrollviewX}}}],
+          //   {useNativeDriver: false},
+          //   {listeners: event => console.log(event)},
+          // )}
+          // scrollTo={{x: 50, y: 0, animated: true}}
           style={{}}
+          // onMomentumScrollBegin={() => {
+          //   console.log('scroll');
+          // }}
           contentContainerStyle={{}}>
           <View
             style={{
@@ -61,26 +78,19 @@ const Detail = () => {
               alignItems: 'center',
               backgroundColor: 'white',
             }}>
-            <View style={[styles.box]}>
-              <Text style={styles.boxContent}>WHAT</Text>
-            </View>
-            <View style={styles.box}>
-              <Text style={styles.boxContent}>WHY</Text>
-            </View>
-            <View style={styles.box}>
-              <Text style={styles.boxContent}>WHEN</Text>
-            </View>
-            <View style={styles.box}>
-              <Text style={styles.boxContent}>WHERE</Text>
-            </View>
-            <View style={styles.box}>
-              <Text style={styles.boxContent}>WHO</Text>
-            </View>
-            <View style={styles.box}>
-              <Text style={styles.boxContent}>HOW</Text>
-            </View>
+            {data?.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={item.id}
+                  onPress={() => onItemPress(index)}>
+                  <View style={styles.box}>
+                    <Text style={styles.boxContent}>{item.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
           </View>
-        </ScrollView>
+        </Animated.ScrollView>
         <Animated.View
           style={{
             borderBottomWidth: 5,
@@ -91,6 +101,7 @@ const Detail = () => {
                 translateX: scrollX.interpolate({
                   inputRange: [0, width, 2 * width, 3 * width, 4 * width],
                   outputRange: [0, 60, 140, 220, 300],
+                  extrapolate: 'clamp',
                 }),
               },
             ],
@@ -158,8 +169,9 @@ const Detail = () => {
       {/* <SafeAreaView /> */}
       {renderHeader()}
       <FlatList
+        ref={flatlist}
         data={data}
-        onEndReachedThreshold={3}
+        onEndReachedThreshold={0.0}
         scrollEventThrottle={16}
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {x: scrollX}}}],
@@ -168,7 +180,7 @@ const Detail = () => {
         contentContainerStyle={{height}}
         style={{flex: 1}}
         onEndReached={() => {
-          scrollView.current.scrollTo({x: 67, y: 0, animated: true});
+          setShowFilterMode(true);
         }}
         pagingEnabled
         bounces={false}
@@ -215,6 +227,12 @@ const Detail = () => {
         }}
       />
       {renderFooter()}
+      {showFilterMode && (
+        <FilterModal
+          isVisible={showFilterMode}
+          onClose={() => setShowFilterMode(false)}
+        />
+      )}
     </View>
   );
 };
@@ -229,6 +247,7 @@ const styles = StyleSheet.create({
   boxContent: {
     fontWeight: '700',
     fontSize: 15,
+    textTransform: 'uppercase',
   },
   iconStyle: {
     width: 20,

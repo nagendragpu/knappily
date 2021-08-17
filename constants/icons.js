@@ -8,6 +8,7 @@ const uparrow = require('../assets/icons/up-arrow.png');
 const shareblack = require('../assets/icons/shareblack.png');
 const upload = require('../assets/icons/upload.png');
 const three_dot_menu = require('../assets/icons/menu.png');
+const sound = require('../assets/icons/sound.png');
 
 export default {
   bookmark,
@@ -20,4 +21,5 @@ export default {
   uparrow,
   shareblack,
   upload,
+  sound,
 };
