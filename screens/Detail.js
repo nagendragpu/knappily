@@ -15,6 +15,8 @@ import {useRoute} from '@react-navigation/native';
 import {icons} from '../constants';
 const {width, height} = Dimensions.get('window');
 import {useNavigation} from '@react-navigation/native';
+import {RefreshControl} from 'react-native';
+
 import FilterModal from './FilterModal';
 
 const RED_COLOR = '#7c1518';
@@ -25,10 +27,11 @@ const Detail = () => {
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const scrollY = React.useRef(new Animated.Value(0)).current;
   const diffClamp = Animated.diffClamp(scrollY, 0, 70);
-  const [headerIndex, setHeaderIndex] = useState(true);
+  const [headerIndex, setHeaderIndex] = useState(0);
   const scrollviewX = React.useRef(new Animated.Value(0)).current;
   const flatlist = React.useRef();
   const [showFilterMode, setShowFilterMode] = React.useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const onItemPress = React.useCallback(itemIndex => {
     flatlist?.current?.scrollToOffset({
@@ -39,9 +42,9 @@ const Detail = () => {
   const route = useRoute();
   const data = route.params.detail;
   const title = route.params.title;
-  const name = route.params.name;
 
   const scrollView = React.useRef();
+
   function renderHeader() {
     return (
       <View
@@ -50,28 +53,13 @@ const Detail = () => {
           backgroundColor: '#d0d0d0',
           padding: 8,
           paddingBottom: 2,
-          // borderWidth: 2,
-          // borderColor: 'red',
         }}>
         <Animated.ScrollView
           ref={scrollView}
           horizontal={true}
-          showsVerticalScrollIndicator={false}
-          // onScroll={Animated.event(
-          //   [{nativeEvent: {contentOffset: {x: scrollviewX}}}],
-          //   {useNativeDriver: false},
-          //   {listeners: event => console.log(event)},
-          // )}
-          // scrollTo={{x: 50, y: 0, animated: true}}
-          style={{}}
-          // onMomentumScrollBegin={() => {
-          //   console.log('scroll');
-          // }}
-          contentContainerStyle={{}}>
+          showsVerticalScrollIndicator={false}>
           <View
             style={{
-              // height: 100,
-              //   backgroundColor: 'yellow',
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -82,9 +70,21 @@ const Detail = () => {
               return (
                 <TouchableOpacity
                   key={item.id}
-                  onPress={() => onItemPress(index)}>
+                  onPress={() => {
+                    onItemPress(index);
+                    setHeaderIndex(index);
+                  }}
+                  onLayout={event => {
+                    console.log(event.nativeEvent);
+                  }}>
                   <View style={styles.box}>
-                    <Text style={styles.boxContent}>{item.name}</Text>
+                    <Text
+                      style={[
+                        styles.boxContent,
+                        {color: headerIndex !== index ? 'grey' : 'black'},
+                      ]}>
+                      {item.name}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -171,8 +171,19 @@ const Detail = () => {
       <FlatList
         ref={flatlist}
         data={data}
-        onEndReachedThreshold={0.0}
+        onEndReachedThreshold={0}
         scrollEventThrottle={16}
+        // refreshControl={
+        //   <RefreshControl
+        //     //refresh control used for the Pull to Refresh
+        //     refreshing={refreshing}
+        //     onRefresh={React.useCallback(() => {
+        //       setRefreshing(true);
+        //       console.log('Refreshing');
+        //       setRefreshing(false);
+        //     }, [])}
+        //   />
+        // }
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {x: scrollX}}}],
           {useNativeDriver: false},
