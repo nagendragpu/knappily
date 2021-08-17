@@ -73,9 +73,6 @@ const Detail = () => {
                   onPress={() => {
                     onItemPress(index);
                     setHeaderIndex(index);
-                  }}
-                  onLayout={event => {
-                    console.log(event.nativeEvent);
                   }}>
                   <View style={styles.box}>
                     <Text

@@ -51,13 +51,13 @@ const Main = () => {
           }).start(setHeaderHide(!headerHide));
         }
       }
-      if (currentIndex > 0 && gesture.dy > 150 && gesture.vy > 0.3) {
+      if (currentIndex > 0 && gesture.dy > 50 && gesture.vy > 0.2) {
         Animated.timing(swipedcard, {
           toValue: {
             x: 0,
             y: 0,
           },
-          duration: 400,
+          duration: 200,
           useNativeDriver: false,
           // friction: 5,
         }).start(() => {
@@ -67,7 +67,7 @@ const Main = () => {
         });
       } else if (
         -gesture.dy > 50 &&
-        -gesture.vy > 0.3 &&
+        -gesture.vy > 0.2 &&
         currentIndex < data.length - 1
       ) {
         console.log('reached');
@@ -77,7 +77,7 @@ const Main = () => {
             x: 0,
             y: -height,
           },
-          duration: 400,
+          duration: 200,
           useNativeDriver: false,
           // friction: 5,
         }).start(() => {
@@ -104,7 +104,7 @@ const Main = () => {
         swipedcard.setValue({x: 0, y: -height + gesture.dy});
       } else {
         console.log('swipeUp', gesture.dy);
-        if (currentIndex < data.length - 1 && currentIndex !== 0) {
+        if (currentIndex < data.length - 1 && gesture.dy < 0) {
           swipe.setValue({x: 0, y: gesture.dy});
         }
       }

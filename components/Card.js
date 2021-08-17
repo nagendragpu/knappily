@@ -64,7 +64,7 @@ const Card = ({
           }}>
           <View style={{flex: 1}}>
             <TouchableOpacity
-              onPressIn={() => navigation.navigate('Detail', item)}>
+              onPressOut={() => navigation.navigate('Detail', item)}>
               <Text
                 style={{
                   fontWeight: '600',
