@@ -21,43 +21,24 @@ const FilterModal = ({isVisible, onClose}) => {
   const scaleValue = React.useRef(new Animated.Value(0)).current;
   React.useEffect(() => {
     if (showFilterMode) {
-      Animated.timing(modalAnimatedValue, {
+      Animated.timing(scaleValue, {
         toValue: 1,
-        duration: 400,
-        useNativeDriver: false,
+        duration: 200,
+        easing: Easing.linear,
+        useNativeDriver: true,
+        //   delay: 500,
       }).start();
     } else {
-      Animated.timing(modalAnimatedValue, {
+      Animated.timing(scaleValue, {
         toValue: 0,
-        duration: 400,
-        useNativeDriver: false,
+        duration: 200,
+        easing: Easing.linear,
+        useNativeDriver: true,
+        //   delay: 500,
       }).start(() => onClose());
-    }
-    if (showFilterMode) {
-      Animated.timing(scaleValue, {
-        toValue: 1,
-        duration: 200,
-        easing: Easing.linear,
-        useNativeDriver: true,
-        //   delay: 500,
-      }).start();
-    } else {
-      Animated.timing(scaleValue, {
-        toValue: 0,
-        duration: 200,
-        easing: Easing.linear,
-        useNativeDriver: true,
-        //   delay: 500,
-      }).start();
     }
   }, [showFilterMode]);
 
-  const modalY = modalAnimatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: [-150, 5],
-  });
-
-  console.log('Modal', height - 650);
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
       <View
@@ -88,7 +69,10 @@ const FilterModal = ({isVisible, onClose}) => {
           }}>
           <Animated.View style={[styles.rowView]}>
             <Animated.Text
-              style={[styles.textStyle, {transform: [{scale: scaleValue}]}]}>
+              style={[
+                [styles.textStyle, {transform: [{scale: scaleValue}]}],
+                {transform: [{scale: scaleValue}]},
+              ]}>
               Reference
             </Animated.Text>
             <Animated.View
@@ -96,33 +80,45 @@ const FilterModal = ({isVisible, onClose}) => {
               <Image style={styles.iconStyle} source={icons.menu} />
             </Animated.View>
           </Animated.View>
-          <Animated.View
-            style={[styles.rowView, {transform: [{scale: scaleValue}]}]}>
-            <Text style={styles.textStyle}>Next Knapp</Text>
-            <View style={styles.iconView}>
+          <Animated.View style={[styles.rowView]}>
+            <Animated.Text
+              style={[styles.textStyle, {transform: [{scale: scaleValue}]}]}>
+              Next Knapp
+            </Animated.Text>
+            <Animated.View
+              style={[styles.iconView, {transform: [{scale: scaleValue}]}]}>
               <Image style={styles.iconStyle} source={icons.uparrow} />
-            </View>
+            </Animated.View>
           </Animated.View>
-          <Animated.View
-            style={[styles.rowView, {transform: [{scale: scaleValue}]}]}>
-            <Text style={styles.textStyle}>Bookmark</Text>
-            <View style={styles.iconView}>
+          <Animated.View style={[styles.rowView]}>
+            <Animated.Text
+              style={[styles.textStyle, {transform: [{scale: scaleValue}]}]}>
+              Bookmark
+            </Animated.Text>
+            <Animated.View
+              style={[styles.iconView, {transform: [{scale: scaleValue}]}]}>
               <Image style={styles.iconStyle} source={icons.bookmark} />
-            </View>
+            </Animated.View>
           </Animated.View>
-          <Animated.View
-            style={[styles.rowView, {transform: [{scale: scaleValue}]}]}>
-            <Text style={styles.textStyle}>Text to speech</Text>
-            <View style={styles.iconView}>
+          <Animated.View style={[styles.rowView]}>
+            <Animated.Text
+              style={[styles.textStyle, {transform: [{scale: scaleValue}]}]}>
+              Text to speech
+            </Animated.Text>
+            <Animated.View
+              style={[styles.iconView, {transform: [{scale: scaleValue}]}]}>
               <Image style={styles.iconStyle} source={icons.sound} />
-            </View>
+            </Animated.View>
           </Animated.View>
-          <Animated.View
-            style={[styles.rowView, {transform: [{scale: scaleValue}]}]}>
-            <Text style={styles.textStyle}>share</Text>
-            <View style={styles.iconView}>
+          <Animated.View style={[styles.rowView]}>
+            <Animated.Text
+              style={[styles.textStyle, {transform: [{scale: scaleValue}]}]}>
+              share
+            </Animated.Text>
+            <Animated.View
+              style={[styles.iconView, {transform: [{scale: scaleValue}]}]}>
               <Image style={styles.iconStyle} source={icons.shareblack} />
-            </View>
+            </Animated.View>
           </Animated.View>
         </Animated.View>
       </View>
