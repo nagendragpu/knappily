@@ -170,17 +170,6 @@ const Detail = () => {
         data={data}
         onEndReachedThreshold={0}
         scrollEventThrottle={16}
-        // refreshControl={
-        //   <RefreshControl
-        //     //refresh control used for the Pull to Refresh
-        //     refreshing={refreshing}
-        //     onRefresh={React.useCallback(() => {
-        //       setRefreshing(true);
-        //       console.log('Refreshing');
-        //       setRefreshing(false);
-        //     }, [])}
-        //   />
-        // }
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {x: scrollX}}}],
           {useNativeDriver: false},
@@ -208,9 +197,7 @@ const Detail = () => {
               <View
                 style={{
                   backgroundColor: 'white',
-                  borderWidth: 1,
-                  borderColor: 'red',
-                  // height,
+
                   width,
                 }}>
                 <View>
