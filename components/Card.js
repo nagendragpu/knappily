@@ -9,13 +9,9 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-const {width, height} = Dimensions.get('window');
-import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 
-import {icons} from '../constants';
-
-const RED_COLOR = '#7c1518';
+import {icons, SIZES, COLORS} from '../constants';
 
 const Card = ({
   item,
@@ -27,17 +23,16 @@ const Card = ({
   ...dragHandlers
 }) => {
   const navigation = useNavigation();
-  // console.log(item.detail);
 
   return (
     <Animated.View
       {...dragHandlers}
       style={[
         {
-          backgroundColor: '#fafafa',
+          backgroundColor: COLORS.white2,
           position: 'absolute',
-          height,
-          width,
+          height: SIZES.height,
+          width: SIZES.width,
         },
         isSwipe
           ? swipedcard.getLayout()
@@ -47,20 +42,24 @@ const Card = ({
       ]}>
       <Image
         style={{
-          height: height * 0.55,
-          width,
+          height: SIZES.height * 0.55,
+          width: SIZES.width,
           borderWidth: 1,
           resizeMode: 'cover',
         }}
         source={{uri: item.Img}}
       />
-      <View style={{paddingHorizontal: 16, flex: 1, flexDirection: 'column'}}>
+      <View
+        style={{
+          paddingHorizontal: SIZES.padding,
+          flex: 1,
+          flexDirection: 'column',
+        }}>
         <View
           style={{
-            paddingVertical: 16 / 2,
+            paddingVertical: SIZES.padding / 2,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            // flexGrow: 0,
           }}>
           <View style={{flex: 1}}>
             <TouchableOpacity
@@ -68,7 +67,7 @@ const Card = ({
               <Text
                 style={{
                   fontWeight: '600',
-                  fontSize: 18,
+                  fontSize: 20,
                 }}>
                 {item.title}
               </Text>
@@ -78,9 +77,8 @@ const Card = ({
             style={{
               height: 40,
               width: 30,
-              tintColor: RED_COLOR,
+              tintColor: COLORS.primary,
               marginTop: -10,
-              // flex: 1,
             }}
             source={icons.bookmark}
           />
@@ -88,7 +86,7 @@ const Card = ({
         <View style={{flex: 1}}>
           <Text
             style={{
-              fontSize: 16,
+              fontSize: SIZES.fontSize,
               fontWeight: '400',
               color: 'gray',
             }}>
@@ -102,17 +100,19 @@ const Card = ({
             borderTopWidth: 1,
             borderTopColor: 'gray',
             marginBottom: 20,
+            // paddingBottom: SIZES.padding,
             justifyContent: 'space-between',
           }}>
           <Text
             style={{
               fontWeight: '600',
-              color: RED_COLOR,
-              fontSize: 16,
+              color: COLORS.primary,
+              fontSize: SIZES.fontSize,
             }}>
             Sports
           </Text>
-          <Text style={{marginRight: 50, color: 'gray', fontSize: 16}}>
+          <Text
+            style={{marginRight: 50, color: 'gray', fontSize: SIZES.fontSize}}>
             Aug 9,2021
           </Text>
         </View>
@@ -121,13 +121,13 @@ const Card = ({
           style={{
             position: 'absolute',
             bottom: 20,
-            right: 16,
+            right: SIZES.padding,
             height: 40,
             width: 40,
             borderRadius: 20,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: RED_COLOR,
+            backgroundColor: COLORS.primary,
             elevation: 10,
           }}>
           <Image

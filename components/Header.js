@@ -1,10 +1,18 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Animated} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Animated,
+  TouchableOpacity,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {icons} from '../constants';
+import {COLORS, icons, SIZES} from '../constants';
+
+const HEADER_HEIGHT = 60;
 
 const Header = ({headerHeight}) => {
-  console.log(headerHeight);
   return (
     <>
       <LinearGradient
@@ -23,13 +31,13 @@ const Header = ({headerHeight}) => {
           top: 0,
           left: 0,
           right: 0,
-          height: 60,
+          height: HEADER_HEIGHT,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
           // backgroundColor: RED_COLOR,
-          paddingHorizontal: 16,
-          paddingVertical: 16 / 2,
+          paddingHorizontal: SIZES.padding,
+          paddingVertical: SIZES.padding / 2,
           zIndex: 2,
           transform: [{translateY: headerHeight}],
         }}>
@@ -37,13 +45,12 @@ const Header = ({headerHeight}) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            // justifyContent: 'space-evenly',
           }}>
           <Image style={styles.iconStyle} source={icons.menu_dots} />
           <Text
             style={{
-              color: 'white',
-              fontSize: 25,
+              color: COLORS.white,
+              fontSize: SIZES.fontSize + SIZES.base,
               fontWeight: '600',
               marginLeft: 10,
             }}>
@@ -54,15 +61,14 @@ const Header = ({headerHeight}) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            // borderColor: 'white',
-            // borderWidth: 2,
-            // marginLeft: 80,
           }}>
           <Image style={styles.iconStyle} source={icons.coffee} />
-          <Image
-            style={[styles.iconStyle, {marginHorizontal: 10}]}
-            source={icons.uparrow}
-          />
+          <TouchableOpacity>
+            <Image
+              style={[styles.iconStyle, {marginHorizontal: 10}]}
+              source={icons.uparrow}
+            />
+          </TouchableOpacity>
           <Image style={styles.iconStyle} source={icons.menu} />
           <Image
             style={[styles.iconStyle, {marginLeft: -10}]}

@@ -1,37 +1,24 @@
-import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  Image,
-  View,
-  Dimensions,
-  Easing,
-  Animated,
-  FlatList,
-  PanResponder,
-} from 'react-native';
-import {useRef} from 'react';
+import React, {useState, useRef} from 'react';
+import {StyleSheet, Easing, Animated, PanResponder} from 'react-native';
 import Card from '../components/Card';
 import {data} from '../constants/data';
-const {width, height} = Dimensions.get('window');
 import Header from '../components/Header';
+import {SIZES} from '../constants';
 
 const Main = () => {
   const swipe = useRef(new Animated.ValueXY()).current;
-  const swipedcard = useRef(new Animated.ValueXY({x: 0, y: -height})).current;
+  const swipedcard = useRef(
+    new Animated.ValueXY({x: 0, y: -SIZES.height}),
+  ).current;
   const headerHeight = React.useRef(new Animated.Value(0)).current;
   const [headerHide, setHeaderHide] = React.useState(true);
   const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [dummyData, setDummyData] = useState(data);
 
   const panResponder = PanResponder.create({
     onMoveShouldSetPanResponder: () => true,
 
     onPanResponderRelease: (e, gesture) => {
-      console.log('onP', gesture.dy);
-
       if (gesture.dy == 0) {
         if (headerHide) {
           Animated.timing(headerHeight, {
@@ -63,19 +50,17 @@ const Main = () => {
         }).start(() => {
           setCurrentIndex(prevIndex => prevIndex - 1);
 
-          swipedcard.setValue({x: 0, y: -height});
+          swipedcard.setValue({x: 0, y: -SIZES.height});
         });
       } else if (
         -gesture.dy > 50 &&
         -gesture.vy > 0.2 &&
         currentIndex < data.length - 1
       ) {
-        console.log('reached');
-
         Animated.timing(swipe, {
           toValue: {
             x: 0,
-            y: -height,
+            y: -SIZES.height,
           },
           duration: 200,
           useNativeDriver: false,
@@ -92,7 +77,7 @@ const Main = () => {
             useNativeDriver: false,
           }),
           Animated.spring(swipedcard, {
-            toValue: {x: 0, y: -height},
+            toValue: {x: 0, y: -SIZES.height},
             useNativeDriver: false,
           }),
         ]).start();
@@ -100,24 +85,22 @@ const Main = () => {
     },
     onPanResponderMove: (e, gesture) => {
       if (gesture.dy > 0 && currentIndex > 0) {
-        console.log('swipe deow');
-        swipedcard.setValue({x: 0, y: -height + gesture.dy});
+        swipedcard.setValue({x: 0, y: -SIZES.height + gesture.dy});
       } else {
-        console.log('swipeUp', gesture.dy);
         if (currentIndex < data.length - 1 && gesture.dy < 0) {
           swipe.setValue({x: 0, y: gesture.dy});
         }
       }
     },
   });
+
   return (
     <Animated.View style={{flex: 1, backgroundColor: 'yellow'}}>
       <Header headerHeight={headerHeight} />
 
-      {data
+      {dummyData
         ?.map((item, index) => {
           if (index === currentIndex - 1) {
-            console.log('swipedcard');
             const dragHandlers = panResponder.panHandlers;
             const isSwipe = true;
             return (

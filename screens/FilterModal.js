@@ -1,23 +1,18 @@
 import React, {useState} from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   Modal,
   Animated,
   TouchableWithoutFeedback,
-  Dimensions,
   Image,
   Easing,
 } from 'react-native';
-import {icons} from '../constants';
-const {width, height} = Dimensions.get('window');
-
-const RED_COLOR = '#7c1518';
+import {COLORS, icons, SIZES} from '../constants';
+const HEADER_HEIGHT = 70;
 
 const FilterModal = ({isVisible, onClose}) => {
   const [showFilterMode, setShowFilterMode] = React.useState(isVisible);
-  const modalAnimatedValue = React.useRef(new Animated.Value(0)).current;
   const scaleValue = React.useRef(new Animated.Value(0)).current;
   React.useEffect(() => {
     if (showFilterMode) {
@@ -44,9 +39,9 @@ const FilterModal = ({isVisible, onClose}) => {
       <View
         style={{
           //   flex: 1,
-          height: height * 0.8,
-          marginTop: 65,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          height: SIZES.height * 0.8,
+          marginTop: HEADER_HEIGHT,
+          backgroundColor: COLORS.transparentBlack5,
         }}>
         <TouchableWithoutFeedback onPress={() => setShowFilterMode(false)}>
           <View
@@ -64,7 +59,6 @@ const FilterModal = ({isVisible, onClose}) => {
             position: 'absolute',
             right: 10,
             bottom: 0,
-            // width: '100%',
             alignItems: 'flex-end',
           }}>
           <Animated.View style={[styles.rowView]}>
@@ -139,7 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  iconStyle: {width: 25, height: 25, tintColor: RED_COLOR},
+  iconStyle: {width: 25, height: 25, tintColor: COLORS.primary},
   textStyle: {color: 'white', fontWeight: 'bold', fontSize: 15},
   rowView: {
     flexDirection: 'row',
