@@ -28,10 +28,11 @@ const Detail = () => {
   const [headerIndex, setHeaderIndex] = useState(0);
   const flatlist = React.useRef();
   const [showFilterMode, setShowFilterMode] = React.useState(false);
+  const headerScrollX = React.useRef(new Animated.Value(0)).current;
 
   const onItemPress = React.useCallback(itemIndex => {
     flatlist?.current?.scrollToOffset({
-      offset: itemIndex * width,
+      offset: itemIndex * SIZES.width,
     });
   });
 
@@ -49,11 +50,16 @@ const Detail = () => {
           height: HEADER_HEIGHT,
           backgroundColor: COLORS.lightGray,
           padding: SIZES.base,
-          paddingBottom: 2,
+          // paddingBottom: 2,
         }}>
         <Animated.ScrollView
           ref={scrollView}
           horizontal={true}
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {x: headerScrollX}}}],
+            {useNativeDriver: false},
+          )}
           showsVerticalScrollIndicator={false}>
           <View
             style={{
@@ -87,8 +93,8 @@ const Detail = () => {
               );
             })}
           </View>
+          <Indicator scrollX={scrollX} />
         </Animated.ScrollView>
-        <Indicator scrollX={scrollX} />
       </View>
     );
   }
@@ -197,7 +203,7 @@ const Detail = () => {
                     }}
                   />
                 </View>
-                <View style={{flex: 1}}>
+                <View style={{flex: 1, paddingBottom: HEADER_HEIGHT}}>
                   <Text
                     style={{
                       fontWeight: '600',
