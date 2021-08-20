@@ -42,6 +42,7 @@ const Detail = () => {
   const route = useRoute();
   const data = route.params.detail;
   const title = route.params.title;
+  const Img = route.params.Img;
 
   const scrollView = React.useRef();
 
@@ -202,7 +203,7 @@ const Detail = () => {
                 }}>
                 <View>
                   <Image
-                    source={require('../assets/images/joe.jpg')}
+                    source={{uri: Img}}
                     style={{
                       height: 300,
                       width,

@@ -52,7 +52,7 @@ const Card = ({
           borderWidth: 1,
           resizeMode: 'cover',
         }}
-        source={require('../assets/images/joe.jpg')}
+        source={{uri: item.Img}}
       />
       <View style={{paddingHorizontal: 16, flex: 1, flexDirection: 'column'}}>
         <View
